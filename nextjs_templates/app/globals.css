@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+  font-family: "Noto Sans KR", sans-serif;
+}
+.calendar {
+  max-width: 350px; /* 컨테이너의 최대 너비를 설정합니다 */
+  margin: auto;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.weekdays {
+  margin-bottom: 10px;
+}
+
+.weekdays,
+.calendar-grid {
+  border-bottom: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7개의 칼럼을 동일한 비율로 설정 */
+}
+
+.week-day,
+.calendar-day {
+  height: 50px; /* 높이 설정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-day {
+  /* border: 1px solid #ddd; */
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease-out;
+}
+
+.calendar-day.selected {
+  transition: background-color 0.2s ease-out;
+  background-color: pink;
+  border-radius: 50%;
+  color: white;
+}
+
+.calendar-day.start-or-end {
+  transition: background-color 0.2s ease-out;
+  background-color: pink;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
+}
+
+.empty {
+  background-color: #f0f0f0;
+}
+
+.selected-date {
+  margin-top: 10px;
+}
