@@ -2,21 +2,25 @@
 
 import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/ko";
+
+dayjs.locale("ko"); // 한국어 로케일을 설정합니다.
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
-  const weekdaysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const weekdaysShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const daysInMonth = () => {
     const days = [];
-    const startDayOfMonth = currentMonth.startOf("month").day();
+    const firstDayOfMonth = currentMonth.startOf("month").day();
+    const startDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // 일요일이면 6, 그 외에는 하루 빼기
     const endDayOfMonth = currentMonth.endOf("month").date();
 
     // Empty days for start of the month
-    for (let i = 0; i < startDayOfMonth; i++) {
+    for (let i = 0; i < startDay; i++) {
       days.push(<div key={`empty-${i}`} className="calendar-day empty"></div>);
     }
 
@@ -28,12 +32,19 @@ const Calendar = () => {
       const isStartOrEnd =
         day.isSame(startDate, "day") || day.isSame(endDate, "day");
 
+      const dayOfWeek = day.day();
+      const isSaturday = dayOfWeek === 6; // 토요일 체크
+      const isSunday = dayOfWeek === 0; // 일요일 체크
+      const dayClasses = `calendar-day ${isSaturday ? "saturday" : ""} ${
+        isSunday ? "sunday" : ""
+      }`;
+
       days.push(
         <div
           key={`day-${i}`}
           className={`calendar-day ${isSelected ? "selected" : ""} ${
             isStartOrEnd ? "start-or-end" : ""
-          }`}
+          } ${dayClasses}`}
           onClick={() => handleDateClick(day)}
         >
           {i}

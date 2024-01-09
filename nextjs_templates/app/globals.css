@@ -61,6 +61,14 @@
   font-weight: bold;
 }
 
+.calendar-day.saturday {
+  color: blue;
+}
+
+.calendar-day.sunday {
+  color: red;
+}
+
 .empty {
   background-color: #f0f0f0;
 }
