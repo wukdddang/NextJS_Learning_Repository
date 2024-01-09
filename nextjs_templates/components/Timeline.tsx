@@ -1,6 +1,9 @@
 "use client";
 
-import EDSCTimeline from "@edsc/timeline";
+// import EDSCTimeline from "@edsc/timeline";
+import dynamic from "next/dynamic";
+
+const EDSCTimeline = dynamic(() => import("@edsc/timeline"), { ssr: false });
 
 const Timeline = () => {
   return (
