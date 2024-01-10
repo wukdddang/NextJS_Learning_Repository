@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 
-dayjs.locale("ko"); // 한국어 로케일을 설정합니다.
+// dayjs.locale("ko"); // 한국어 로케일을 설정합니다.
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs());
