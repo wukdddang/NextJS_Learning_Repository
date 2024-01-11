@@ -1,11 +1,24 @@
 "use client";
 
+import { Dayjs } from "dayjs";
 // import EDSCTimeline from "@edsc/timeline";
 import dynamic from "next/dynamic";
 
 const EDSCTimeline = dynamic(() => import("@edsc/timeline"), { ssr: false });
 
-const Timeline = () => {
+interface TimelineProps {
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+}
+
+const Timeline = ({ startDate, endDate }: TimelineProps) => {
+  const startTime = startDate?.valueOf();
+  const endTime = endDate?.valueOf();
+
+  const isSelected = startTime && endTime;
+
+  const handleTimelineMove = (values: any) => console.log("good", values);
+
   return (
     <>
       <EDSCTimeline
@@ -13,11 +26,18 @@ const Timeline = () => {
           {
             id: "row1",
             title: "Test",
-            intervals: [],
+            intervals: isSelected
+              ? [
+                  [
+                    startTime, // start time
+                    endTime, // end time
+                  ],
+                ]
+              : [], // no intervals if dates not selected
           },
         ]}
       />
-      <EDSCTimeline
+      {/* <EDSCTimeline
         data={[
           {
             id: "row1",
@@ -70,7 +90,7 @@ const Timeline = () => {
           start: new Date("2020-01").getTime(),
           end: new Date("2020-03-15").getTime(),
         }}
-      />
+      /> */}
     </>
   );
 };
