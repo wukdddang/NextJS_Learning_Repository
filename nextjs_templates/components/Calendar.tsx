@@ -117,7 +117,7 @@ const Calendar = () => {
               </option>
             ))}
           </select> */}
-          <div>{selectedMonth}</div>
+          <div onClick={() => {}}>{selectedMonth}</div>
           <button onClick={() => setCurrentMonth(currentMonth.add(1, "month"))}>
             Next
           </button>
