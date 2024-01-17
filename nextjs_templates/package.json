@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@edsc/timeline": "^1.1.7",
+    "@nextui-org/react": "^2.2.9",
     "dayjs": "^1.11.10",
+    "framer-motion": "^10.18.0",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18"
