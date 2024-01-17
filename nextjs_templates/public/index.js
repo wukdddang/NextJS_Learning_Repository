@@ -1,10 +1,10 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { OrbitControls } from "jsm/controls/OrbitControls.js";
 
 import getStarfield from "./src/getStarfield.js";
 import { getFresnelMat } from "./src/getFresnelMat.js";
 
-function init() {
+(function () {
   const rotationSpeed = 0.002; // 회전 속도 조절
 
   const w = window.innerWidth;
@@ -86,21 +86,12 @@ function init() {
     renderer.render(scene, camera);
   }
 
-  function onEverythingLoaded() {
-    const event = new Event("everythingLoaded");
-    window.dispatchEvent(event);
-    console.log("everything loaded");
-  }
-
   animate();
-  onEverythingLoaded();
-}
 
-function handleWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-window.addEventListener("resize", handleWindowResize, false);
-
-init();
+  function handleWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+  window.addEventListener("resize", handleWindowResize, false);
+})();

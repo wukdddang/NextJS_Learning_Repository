@@ -41,9 +41,9 @@ const EarthGlobe = () => {
     const loader = new THREE.TextureLoader();
     const geometry = new THREE.IcosahedronGeometry(1, detail);
     const material = new THREE.MeshPhongMaterial({
-      map: loader.load("/textures/01_earthspec1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
-      specularMap: loader.load("/textures/02_earthspec1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
-      bumpMap: loader.load("/textures/01_earthbump1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
+      map: loader.load("/textures/8081_earthspec10k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
+      specularMap: loader.load("/textures/8081_earthspec10k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
+      bumpMap: loader.load("/textures/8081_earthbump1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
       bumpScale: 0.04,
     });
     const earthMesh = new THREE.Mesh(geometry, material);
