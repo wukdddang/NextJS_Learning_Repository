@@ -41,7 +41,7 @@ const EarthGlobe = () => {
     const loader = new THREE.TextureLoader();
     const geometry = new THREE.IcosahedronGeometry(1, detail);
     const material = new THREE.MeshPhongMaterial({
-      map: loader.load("/textures/8081_earthmap10k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
+      map: loader.load("/textures/01_earthspec1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
       specularMap: loader.load("/textures/02_earthspec1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
       bumpMap: loader.load("/textures/01_earthbump1k.jpg"), // 경로는 실제 파일 위치에 맞게 조정
       bumpScale: 0.04,
@@ -50,7 +50,7 @@ const EarthGlobe = () => {
     earthGroup.add(earthMesh);
 
     const lightsMat = new THREE.MeshBasicMaterial({
-      map: loader.load("/textures/8081_earthlights10k.jpg"),
+      map: loader.load("/textures/03_earthlights1k.jpg"),
       blending: THREE.AdditiveBlending,
     });
     const lightsMesh = new THREE.Mesh(geometry, lightsMat);
@@ -59,7 +59,7 @@ const EarthGlobe = () => {
     const cloudsMat = new THREE.MeshStandardMaterial({
       map: loader.load("/textures/04_earthcloudmap.jpg"),
       transparent: true,
-      opacity: 0.8,
+      opacity: 1,
       blending: THREE.AdditiveBlending,
       alphaMap: loader.load("/textures/05_earthcloudmaptrans.jpg"),
       // alphaTest: 0.3,
@@ -77,7 +77,7 @@ const EarthGlobe = () => {
     scene.add(stars);
 
     // 태양 조명 추가
-    const sunLight = new THREE.DirectionalLight(0xffffff);
+    const sunLight = new THREE.DirectionalLight(0xffffff); // 연한 푸른색
     sunLight.position.set(-100, 100, 10);
     scene.add(sunLight);
 
