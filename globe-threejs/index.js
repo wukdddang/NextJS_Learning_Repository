@@ -39,12 +39,12 @@ function init() {
   const loader = new THREE.TextureLoader();
 
   Promise.all([
-    loadTexture(loader, "./textures/8081_earthmap10k.jpg"),
-    loadTexture(loader, "./textures/8081_earthspec10k.jpg"),
-    loadTexture(loader, "./textures/8081_earthbump10k.jpg"),
-    loadTexture(loader, "./textures/8081_earthlights10k.jpg"),
-    loadTexture(loader, "./textures/04_earthcloudmap.jpg"),
-    loadTexture(loader, "./textures/05_earthcloudmaptrans.jpg"),
+    loadTexture(loader, "/textures/8081_earthmap10k.jpg"),
+    loadTexture(loader, "/textures/8081_earthspec10k.jpg"),
+    loadTexture(loader, "/textures/8081_earthbump10k.jpg"),
+    loadTexture(loader, "/textures/8081_earthlights10k.jpg"),
+    loadTexture(loader, "/textures/04_earthcloudmap.jpg"),
+    loadTexture(loader, "/textures/05_earthcloudmaptrans.jpg"),
     // 다른 텍스처 로드 프로미스 추가...
   ]).then(
     ([earthMap, earthSpec, earthBump, earthLights, cloudMap, cloudTrans]) => {
