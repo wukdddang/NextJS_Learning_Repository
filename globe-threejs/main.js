@@ -15,6 +15,7 @@ let renderer,
   // satellite,
   satellite_2,
   isSatelliteLoaded = false,
+  loader = new GLTFLoader(),
   scene;
 
 function loadTexture(loader, url) {
@@ -24,8 +25,8 @@ function loadTexture(loader, url) {
 }
 
 function loadSatelliteModel() {
-  console.log("loadSatelliteModel");
-  const loader = new GLTFLoader();
+  // console.log("loadSatelliteModel");
+  // const loader = new GLTFLoader();
   loader.load(
     "/International_Space_Station-OFFICIAL_NASA_MODEL.glb",
     function (gltf) {
@@ -34,7 +35,7 @@ function loadSatelliteModel() {
 
       // 현재 데이터는 0.02로 하면 지구랑 비슷한 크기
       // 뒤의 숫자는 지구 대비 크기 비율
-      const scale_st = 0.01 * 0.05;
+      const scale_st = 0.02 * 0.05;
       satellite_2.scale.set(scale_st, scale_st, scale_st);
       satellite_2.position.set(0, 0, 0);
 
@@ -63,12 +64,14 @@ function loadSatelliteModel() {
 function updateSatellitePosition(sat) {
   // 인공위성의 위치를 갱신
   const orbitRadius = (6371 + 500) / 6371; // 궤도의 반지름
-  const orbitSpeed = 0.001; // 궤도의 속도
-  const angleRadians = orbitSpeed + Math.atan2(sat.position.z, sat.position.x);
-  sat.position.x = orbitRadius * Math.cos(angleRadians);
+  const orbitSpeed = 0.00005; // 궤도의 속도
+  const angleRadians = orbitSpeed * Date.now(); // 현재 각도
+  sat.position.x = orbitRadius * Math.cos(angleRadians) + 2;
   sat.position.z = orbitRadius * Math.sin(angleRadians);
+
   //sat.rotation.y += 0.01;
   sat.rotation.y = Math.PI / 2 - angleRadians;
+  console.log(sat.position);
 }
 
 function init() {
@@ -86,7 +89,7 @@ function init() {
 
   const earthGroup = new THREE.Group();
   earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
-  //earthGroup.position.x += 2;
+  earthGroup.position.x += 2;
   scene.add(earthGroup);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -154,38 +157,37 @@ function init() {
       sunLight.position.set(-100, 100, 100);
       scene.add(sunLight);
 
-      // ! 곡선 추가
+      // // ! 곡선 추가
+      // var ellipse = new THREE.EllipseCurve(
+      //   0,
+      //   0, // ax, aY
+      //   1.2,
+      //   1.2, // xRadius, yRadius
+      //   0,
+      //   2 * Math.PI, // aStartAngle, aEndAngle
+      //   false, // aClockwise
+      //   0,
+      //   70
+      //   // aRotation
+      // );
 
-      var ellipse = new THREE.EllipseCurve(
-        0,
-        0, // ax, aY
-        1.2,
-        1.2, // xRadius, yRadius
-        0,
-        2 * Math.PI, // aStartAngle, aEndAngle
-        false, // aClockwise
-        0,
-        70
-        // aRotation
-      );
+      // var points = ellipse.getPoints(100); // 100개의 점으로 구성된 궤도
 
-      var points = ellipse.getPoints(100); // 100개의 점으로 구성된 궤도
+      // var matrix = new THREE.Matrix4();
+      // var angle = Math.PI / 2; // 45도 기울임
+      // matrix.makeRotationX(angle);
 
-      var matrix = new THREE.Matrix4();
-      var angle = Math.PI / 2; // 45도 기울임
-      matrix.makeRotationX(angle);
+      // var rotatedPoints = points.map((p) => {
+      //   var vec3 = new THREE.Vector3(p.x, p.y, 0);
+      //   return vec3.applyMatrix4(matrix);
+      // });
 
-      var rotatedPoints = points.map((p) => {
-        var vec3 = new THREE.Vector3(p.x, p.y, 0);
-        return vec3.applyMatrix4(matrix);
-      });
-
-      var curveGeometry = new THREE.BufferGeometry().setFromPoints(
-        rotatedPoints
-      );
-      var curveMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
-      var ellipseCurve = new THREE.Line(curveGeometry, curveMaterial);
-      scene.add(ellipseCurve);
+      // var curveGeometry = new THREE.BufferGeometry().setFromPoints(
+      //   rotatedPoints
+      // );
+      // var curveMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+      // var ellipseCurve = new THREE.Line(curveGeometry, curveMaterial);
+      // scene.add(ellipseCurve);
 
       // 모든 것이 로드된 후 animate 호출
       animate();
