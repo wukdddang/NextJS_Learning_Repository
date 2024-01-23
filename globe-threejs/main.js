@@ -35,7 +35,7 @@ function loadSatelliteModel() {
 
       // 현재 데이터는 0.02로 하면 지구랑 비슷한 크기
       // 뒤의 숫자는 지구 대비 크기 비율
-      const scale_st = 0.02 * 0.05;
+      const scale_st = 0.03 * 0.05;
       satellite_2.scale.set(scale_st, scale_st, scale_st);
       satellite_2.position.set(0, 0, 0);
 
@@ -71,7 +71,7 @@ function updateSatellitePosition(sat) {
 
   //sat.rotation.y += 0.01;
   sat.rotation.y = Math.PI / 2 - angleRadians;
-  console.log(sat.position);
+  // console.log(sat.position);
 }
 
 function init() {
@@ -81,8 +81,13 @@ function init() {
   const h = window.innerHeight;
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+  camera.position.x = 2.1936976183060923;
+  camera.position.y = 0.8081163228476546;
+  camera.position.z = 1.880063501104515;
 
-  camera.position.z = 3;
+  scene.add(camera);
+
+  // camera.position.z = 3;
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(w, h);
   document.body.appendChild(renderer.domElement);
@@ -107,7 +112,7 @@ function init() {
     loadTexture(loader, "/textures/8081_earthbump10k.jpg"),
     loadTexture(loader, "/textures/8081_earthlights10k.jpg"),
     loadTexture(loader, "/textures/04_earthcloudmap.jpg"),
-    loadTexture(loader, "/textures/05_earthcloudmaptrans.jpg"),
+    loadTexture(loader, "/textures/05_earthcloudmaptrans_new.jpg"),
     // 다른 텍스처 로드 프로미스 추가...
   ]).then(
     ([earthMap, earthSpec, earthBump, earthLights, cloudMap, cloudTrans]) => {
@@ -138,6 +143,7 @@ function init() {
       });
       cloudsMesh = new THREE.Mesh(geometry, cloudsMat);
       cloudsMesh.scale.setScalar(1);
+      cloudsMesh.opacity = 0.8;
       earthGroup.add(cloudsMesh);
 
       const fresnelMat = getFresnelMat();
@@ -190,6 +196,19 @@ function init() {
       // scene.add(ellipseCurve);
 
       // 모든 것이 로드된 후 animate 호출
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.enableDamping = true;
+      controls.rotateSpeed = 0.3;
+
+      // Add this event listener
+      controls.addEventListener("change", () => {
+        console.log("Camera Position:", camera.position);
+        console.log("Camera Rotation:", camera.rotation);
+      });
+
       animate();
       onEverythingLoaded();
     }
