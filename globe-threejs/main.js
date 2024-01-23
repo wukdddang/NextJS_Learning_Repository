@@ -256,6 +256,13 @@ function init() {
   }
 }
 
+window.addEventListener("everythingLoaded", () => {
+  const canvas = document.getElementsByTagName("canvas")[0];
+  if (canvas) {
+    canvas.style.opacity = 1;
+  }
+});
+
 function handleWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
