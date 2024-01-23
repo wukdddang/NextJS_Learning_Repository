@@ -5,6 +5,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import getStarfield from "./src/getStarfield.js";
 import { getFresnelMat } from "./src/getFresnelMat.js";
 
+const body = document.querySelector("body");
+body.style.margin = "0";
+body.style.background = "#000000";
+
 let renderer,
   earthMesh,
   lightsMesh,
@@ -197,19 +201,23 @@ function init() {
 
       // 모든 것이 로드된 후 animate 호출
 
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableZoom = false;
-      controls.enablePan = false;
-      controls.enableDamping = true;
-      controls.rotateSpeed = 0.3;
+      // const controls = new OrbitControls(camera, renderer.domElement);
+      // controls.enableZoom = false;
+      // controls.enablePan = false;
+      // controls.enableDamping = true;
+      // controls.rotateSpeed = 0.3;
 
-      // Add this event listener
-      controls.addEventListener("change", () => {
-        console.log("Camera Position:", camera.position);
-        console.log("Camera Rotation:", camera.rotation);
-      });
+      // // Add this event listener
+      // controls.addEventListener("change", () => {
+      //   console.log("Camera Position:", camera.position);
+      //   console.log("Camera Rotation:", camera.rotation);
+      // });
 
       animate();
+      const canvas = document.getElementsByTagName("canvas")[0];
+      if (canvas) {
+        canvas.style.opacity = 0;
+      }
       onEverythingLoaded();
     }
   );
@@ -240,7 +248,7 @@ function init() {
     if (isSatelliteLoaded) {
       updateSatellitePosition(satellite_2);
     }
-    console.log("animate");
+    // console.log("animate");
 
     renderer.render(scene, camera);
   }
@@ -248,20 +256,24 @@ function init() {
   function onEverythingLoaded() {
     const event = new Event("everythingLoaded");
     window.dispatchEvent(event);
+
     console.log("everything loaded");
     const canvas = document.getElementsByTagName("canvas")[0];
     if (canvas) {
-      canvas.style.opacity = 1;
+      canvas.style.transition = "opacity 1s";
+      canvas.style.display = "none";
+      // canvas.style.opacity = 0;
+      // canvas.style.opacity = 1;
     }
   }
 }
 
-window.addEventListener("everythingLoaded", () => {
-  const canvas = document.getElementsByTagName("canvas")[0];
-  if (canvas) {
-    canvas.style.opacity = 1;
-  }
-});
+// window.addEventListener("everythingLoaded", () => {
+//   const canvas = document.getElementsByTagName("canvas")[0];
+//   if (canvas) {
+//     canvas.style.opacity = 1;
+//   }
+// });
 
 function handleWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
