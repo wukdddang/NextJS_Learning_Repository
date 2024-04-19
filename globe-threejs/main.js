@@ -41,7 +41,7 @@ function loadSatelliteModel() {
       // 뒤의 숫자는 지구 대비 크기 비율
       const scale_st = 0.03 * 0.05;
       satellite_2.scale.set(scale_st, scale_st, scale_st);
-      satellite_2.position.set(0, 0, 0);
+      satellite_2.position.set(10, 0, 0);
 
       const orbitRadius = 10; // 궤도의 반지름
       const initialAngleRadians = 20 * (Math.PI / 180); // 라디안으로 변환된 초기 각도
@@ -68,13 +68,17 @@ function loadSatelliteModel() {
 function updateSatellitePosition(sat) {
   // 인공위성의 위치를 갱신
   const orbitRadius = (6371 + 500) / 6371; // 궤도의 반지름
-  const orbitSpeed = 0.00005; // 궤도의 속도
-  const angleRadians = orbitSpeed * Date.now(); // 현재 각도
-  sat.position.x = orbitRadius * Math.cos(angleRadians) + 2;
-  sat.position.z = orbitRadius * Math.sin(angleRadians);
+  const orbitSpeed = 0.00005; // 궤도의 속도. 원래값임.
+  // const orbitSpeed = 0.001; // 궤도의 속도. 테스트용
+  const angleRadians = orbitSpeed * Date.now(); // 라디안으로 변환된 초기 각도
+
+  // 위성이 남북으로 이동하도록 Y와 Z 좌표 사용 (남북 궤도 시뮬레이션을 위해)
+  sat.position.x = 2.2; // 남북 궤도에서 X 위치는 고정
+  sat.position.y = orbitRadius * Math.sin(angleRadians); // 수직 이동을 위해 sin 사용
+  sat.position.z = orbitRadius * Math.cos(angleRadians); // 궤도를 위해 cos 사용
 
   //sat.rotation.y += 0.01;
-  sat.rotation.y = Math.PI / 2 - angleRadians;
+  sat.rotation.x = angleRadians;
   // console.log(sat.position);
 }
 
@@ -85,9 +89,9 @@ function init() {
   const h = window.innerHeight;
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-  camera.position.x = 2.1936976183060923;
-  camera.position.y = 0.8081163228476546;
-  camera.position.z = 1.880063501104515;
+  camera.position.x = 2.763913389840482;
+  camera.position.y = 0.5605380308886303;
+  camera.position.z = 1.0230248723213076;
 
   scene.add(camera);
 
@@ -201,13 +205,13 @@ function init() {
 
       // 모든 것이 로드된 후 animate 호출
 
-      // const controls = new OrbitControls(camera, renderer.domElement);
-      // controls.enableZoom = false;
-      // controls.enablePan = false;
-      // controls.enableDamping = true;
-      // controls.rotateSpeed = 0.3;
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.enableDamping = true;
+      controls.rotateSpeed = 0.3;
 
-      // // Add this event listener
+      // Add this event listener
       // controls.addEventListener("change", () => {
       //   console.log("Camera Position:", camera.position);
       //   console.log("Camera Rotation:", camera.rotation);
@@ -216,7 +220,9 @@ function init() {
       animate();
       const canvas = document.getElementsByTagName("canvas")[0];
       if (canvas) {
-        canvas.style.opacity = 0;
+        canvas.style.transition = "opacity 1s";
+        canvas.style.opacity = "0";
+        canvas.style.display = "none";
       }
       onEverythingLoaded();
     }
@@ -258,13 +264,13 @@ function init() {
     window.dispatchEvent(event);
 
     console.log("everything loaded");
-    const canvas = document.getElementsByTagName("canvas")[0];
-    if (canvas) {
-      canvas.style.transition = "opacity 1s";
-      canvas.style.display = "none";
-      // canvas.style.opacity = 0;
-      // canvas.style.opacity = 1;
-    }
+    // const canvas = document.getElementsByTagName("canvas")[0];
+    // if (canvas) {
+    //   canvas.style.transition = "opacity 1s";
+    //   canvas.style.display = "none";
+    //   // canvas.style.opacity = 0;
+    //   // canvas.style.opacity = 1;
+    // }
   }
 }
 
