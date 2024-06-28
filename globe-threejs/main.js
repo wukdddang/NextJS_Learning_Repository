@@ -32,14 +32,16 @@ function loadSatelliteModel() {
   // console.log("loadSatelliteModel");
   // const loader = new GLTFLoader();
   loader.load(
-    "/International_Space_Station-OFFICIAL_NASA_MODEL.glb",
+    // "/International_Space_Station-OFFICIAL_NASA_MODEL.glb",
+    "/Lumir-X Test-A.gltf",
     function (gltf) {
       satellite_2 = gltf.scene;
       // satellite_2.scale.setLength(0.1);
 
       // 현재 데이터는 0.02로 하면 지구랑 비슷한 크기
       // 뒤의 숫자는 지구 대비 크기 비율
-      const scale_st = 0.03 * 0.05;
+      // const scale_st = 0.03 * 0.05;
+      const scale_st = 0.03 * 1;
       satellite_2.scale.set(scale_st, scale_st, scale_st);
       satellite_2.position.set(10, 0, 0);
 
@@ -67,19 +69,23 @@ function loadSatelliteModel() {
 
 function updateSatellitePosition(sat) {
   // 인공위성의 위치를 갱신
-  const orbitRadius = (6371 + 500) / 6371; // 궤도의 반지름
-  const orbitSpeed = 0.00005; // 궤도의 속도. 원래값임.
+  const orbitRadius = (6371 + 3000) / 6371; // 궤도의 반지름
+  const orbitSpeed = 0.0; // 궤도의 속도. 원래값임.
   // const orbitSpeed = 0.001; // 궤도의 속도. 테스트용
   const angleRadians = orbitSpeed * Date.now(); // 라디안으로 변환된 초기 각도
 
   // 위성이 남북으로 이동하도록 Y와 Z 좌표 사용 (남북 궤도 시뮬레이션을 위해)
-  sat.position.x = 2.2; // 남북 궤도에서 X 위치는 고정
-  sat.position.y = orbitRadius * Math.sin(angleRadians); // 수직 이동을 위해 sin 사용
-  sat.position.z = orbitRadius * Math.cos(angleRadians); // 궤도를 위해 cos 사용
+  sat.position.x = 1.0; // 남북 궤도에서 X 위치는 고정
+  sat.position.y = orbitRadius * Math.sin(angleRadians) + 0.3; // 수직 이동을 위해 sin 사용
+  sat.position.z = orbitRadius * Math.cos(angleRadians) + 0.1; // 궤도를 위해 cos 사용
 
   //sat.rotation.y += 0.01;
   sat.rotation.x = angleRadians;
   // console.log(sat.position);
+  // 위성의 회전
+  sat.rotation.x = -1.7; // X축을 중심으로 회전
+  sat.rotation.y = 3; // Y축을 중심으로 회전
+  sat.rotation.z = 0; // Z축을 중심으로 회전
 }
 
 function init() {
@@ -102,7 +108,7 @@ function init() {
 
   const earthGroup = new THREE.Group();
   earthGroup.rotation.z = (-23.4 * Math.PI) / 180;
-  earthGroup.position.x += 2;
+  earthGroup.position.x += 1;
   scene.add(earthGroup);
 
   const controls = new OrbitControls(camera, renderer.domElement);
@@ -115,10 +121,14 @@ function init() {
   const loader = new THREE.TextureLoader();
 
   Promise.all([
-    loadTexture(loader, "/textures/8081_earthmap10k.jpg"),
-    loadTexture(loader, "/textures/8081_earthspec10k.jpg"),
-    loadTexture(loader, "/textures/8081_earthbump10k.jpg"),
-    loadTexture(loader, "/textures/8081_earthlights10k.jpg"),
+    loadTexture(loader, "/textures/00_earthmap1k.jpg"),
+    loadTexture(loader, "/textures/02_earthspec1k.jpg"),
+    loadTexture(loader, "/textures/01_earthbump1k.jpg"),
+    loadTexture(loader, "/textures/03_earthlights1k.jpg"),
+    // loadTexture(loader, "/textures/8081_earthmap10k.jpg"),
+    // loadTexture(loader, "/textures/8081_earthspec10k.jpg"),
+    // loadTexture(loader, "/textures/8081_earthbump10k.jpg"),
+    // loadTexture(loader, "/textures/8081_earthlights10k.jpg"),
     loadTexture(loader, "/textures/04_earthcloudmap.jpg"),
     loadTexture(loader, "/textures/05_earthcloudmaptrans_new.jpg"),
     // 다른 텍스처 로드 프로미스 추가...
@@ -206,8 +216,8 @@ function init() {
       // 모든 것이 로드된 후 animate 호출
 
       const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableZoom = false;
-      controls.enablePan = false;
+      controls.enableZoom = true;
+      controls.enablePan = true;
       controls.enableDamping = true;
       controls.rotateSpeed = 0.3;
 

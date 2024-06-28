@@ -21,7 +21,13 @@ module.exports = {
         type: "asset/resource",
       },
     ],
+    
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./index.html", // 여기서 경로는 프로젝트에 맞게 조정하세요
+    }),
+  ],
   devServer: {
     static: {
       directory: path.join(__dirname, "public"), // 변경된 설정
