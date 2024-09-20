@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3345abe8-c88c-4798-86f7-88262d1d1dbb" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/globe-threejs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/globe-threejs/index.html" afterDir="false" />
-    </list>
+    <list default="true" id="3345abe8-c88c-4798-86f7-88262d1d1dbb" name="변경" comment="Feat: 컴포넌트 라이브러리 적용 프로젝트 추가" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,21 +10,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "wukdddang"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;wukdddang&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/wukdddang/NextJS_Learning_Repository.git",
-    "accountId": "73e630f2-bc7d-42e7-8da3-5bef8f395d83"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/wukdddang/NextJS_Learning_Repository.git&quot;,
+    &quot;accountId&quot;: &quot;73e630f2-bc7d-42e7-8da3-5bef8f395d83&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2iUyy4IV3O4pkf7pjI1mwK6yZ8U" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -40,6 +38,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Users\\PC\\AppData\\Local\\JetBrains\\WebStorm 2024.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -48,6 +47,7 @@
       <map>
         <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
         <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
       </map>
     </option>
   </component>
@@ -64,7 +64,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
       </set>
     </attachedChunks>
   </component>
@@ -77,10 +77,24 @@
       <option name="presentableId" value="Default" />
       <updated>1719559702072</updated>
       <workItem from="1719559703332" duration="161000" />
+      <workItem from="1725437169560" duration="86000" />
     </task>
+    <task id="LOCAL-00001" summary="Feat: 컴포넌트 라이브러리 적용 프로젝트 추가">
+      <option name="closed" value="true" />
+      <created>1725437236790</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1725437236790</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat: 컴포넌트 라이브러리 적용 프로젝트 추가" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat: 컴포넌트 라이브러리 적용 프로젝트 추가" />
   </component>
 </project>

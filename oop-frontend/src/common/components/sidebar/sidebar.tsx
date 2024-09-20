@@ -1,9 +1,9 @@
 'use client';
 
 import Link from "next/link";
-import "lumir-internal-design-system/index.css"
+import "lumir-internal-design-system-nextjs/index.css"
 import LUMIR_LOGO_1 from "~/icons/h_logo-1.png";
-import {MenuCategory, MenuItem} from "lumir-internal-design-system/src/types/menuItems";
+import {MenuCategory, MenuItem} from "lumir-internal-design-system-nextjs/src/types/menuItems";
 import {usePathname, useSearchParams} from "next/navigation";
 import {
   SidebarBottomSection, SidebarCategory,
@@ -11,7 +11,7 @@ import {
   SidebarHeader, SidebarItem,
   SidebarLogo,
   SidebarProvider, SidebarToggle, SidebarUpperSection
-} from "lumir-internal-design-system/src/components/compounds/Sidebar";
+} from "lumir-internal-design-system-nextjs/src/components";
 
 interface SidebarStructure {
   Logo: React.FC;
@@ -86,7 +86,7 @@ const Sidebar = () => {
   return (
 
       <SidebarProvider currentPath={pathname}>
-        <SidebarHeader className="flex items-center gap-2 justify-between">
+        <SidebarHeader className="flex items-center gap-4 justify-between">
           <SidebarLogo src={LUMIR_LOGO_1}  />
           <SidebarToggle />
           

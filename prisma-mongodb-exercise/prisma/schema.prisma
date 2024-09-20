@@ -1,0 +1,214 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String       @id @default(auto()) @map("_id") @db.ObjectId
+  email            String       @unique
+  password         String
+  name             String
+  isAuthenticated  Boolean      @default(false)
+  isEvaluator      Boolean      @default(false)
+  isAdmin          Boolean      @default(false)
+  isEssentialAlarm Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  evaluations      Evaluation[]
+  reports          Report[]
+}
+
+model Division {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum EvaluationLevel {
+  ONE
+  TWO
+}
+
+model Evaluation {
+  id                          String          @id @default(auto()) @map("_id") @db.ObjectId
+  level                       EvaluationLevel @default(ONE)
+  userId                      String          @db.ObjectId
+  user                        User            @relation(fields: [userId], references: [id])
+  evaluatorName               String?
+  applicantId                 String          @db.ObjectId
+  applicant                   Applicant       @relation(fields: [applicantId], references: [id])
+  division                    String?
+  probationPeriod             String?
+  evaluationDate              String?
+  performanceEvaluation       Json[]
+  performanceEvaluationScore  String?
+  desire                      String?
+  cooperation                 String?
+  diligence                   String?
+  responsibility              String?
+  interpersonal               String?
+  personalityEvaluationScore  String?
+  passOpinion                 String?
+  failOpinion                 String?
+  createdAt                   DateTime        @default(now())
+  updatedAt                   DateTime        @updatedAt
+  firstApplicant              Applicant?      @relation("FirstEvaluation", fields: [firstApplicantId], references: [id])
+  firstApplicantId            String?         @db.ObjectId
+  secondApplicant             Applicant?      @relation("SecondEvaluation", fields: [secondApplicantId], references: [id])
+  secondApplicantId           String?         @db.ObjectId
+}
+
+enum Experience {
+  NEW
+  EXPERIENCED
+}
+
+enum Result {
+  PASS
+  FAIL
+  PENDING
+}
+
+enum ApplicantStage {
+  APPLICATION_SUBMITTED
+  RESUME_REVIEW
+  RESUME_PASSED
+  INTERVIEW_PENDING
+  INTERVIEW_EVALUATION
+  INTERVIEW_PASSED
+  ONBOARDING
+  FIRST_EVALUATION
+  SECOND_EVALUATION
+  REJECTED
+}
+
+enum EmployeeType {
+  APPLICANT
+  EMPLOYEE
+}
+
+enum AccessRoute {
+  NOT_ENTERED
+  OTHER
+}
+
+model Applicant {
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  objective          String?
+  experience         Experience
+  resumeResult       Result           @default(PENDING)
+  interviewResult    Result           @default(PENDING)
+  birthday           String?
+  email              String?
+  phone              String?
+  resumePath         String?
+  portfolioPath      String?
+  isAgree            Boolean          @default(false)
+  isOptionalAgree    Boolean          @default(false)
+  isSensitiveAgree   Boolean          @default(false)
+  interviewDate      String?
+  workStartDate      String?
+  presentationDate   String?
+  stage              ApplicantStage   @default(APPLICATION_SUBMITTED)
+  previousStage      ApplicantStage   @default(APPLICATION_SUBMITTED)
+  start              String?
+  end                String?
+  empoloyeeType      EmployeeType?
+  colorLabel         String           @default("default")
+  division           String?
+  failReason         String?
+  accessRoute        AccessRoute      @default(NOT_ENTERED)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  reports            Report[]
+  firstEvaluations   Evaluation[]     @relation("FirstEvaluation")
+  secondEvaluations  Evaluation[]     @relation("SecondEvaluation")
+  interviewSchedules InterviewSchedule[]
+  evaluations        Evaluation[]
+}
+
+model InterviewSchedule {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  applicantId String    @db.ObjectId
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  history     Json[]
+  fixedStart  String?
+  fixedEnd    String?
+  comment     Json[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum RecruitmentStatus {
+  RECRUITING
+  CLOSED
+  ALWAYS_RECRUITING
+}
+
+model RecruitmentField {
+  id        String            @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  desc      String?
+  status    RecruitmentStatus @default(RECRUITING)
+  start     String?
+  end       String?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+enum JobTitle {
+  OFFICE
+  DEVELOPMENT
+  PRODUCTION
+  EMPTY
+}
+
+enum JobLevel {
+  T1
+  T2
+  T3
+  EMPTY
+}
+
+enum JobGrade {
+  A
+  N
+  U
+  EMPTY
+}
+
+model Report {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String    @db.ObjectId
+  user            User      @relation(fields: [userId], references: [id])
+  interviewerName String?
+  applicantId     String    @db.ObjectId
+  applicant       Applicant @relation(fields: [applicantId], references: [id])
+  birthday        String?
+  education       String?
+  career          String?
+  certification   String?
+  home            String?
+  etc             String?
+  knowledge       String?
+  skill           String?
+  attitude        String?
+  desired_salary  String?
+  joinDate        String?
+  utilizationPlan String?
+  overallReview   String?
+  interviewResult String?
+  jobTitle        JobTitle  @default(EMPTY)
+  jobLevel        JobLevel  @default(EMPTY)
+  jobGrade        JobGrade  @default(EMPTY)
+  jobStatusReason String?
+}
