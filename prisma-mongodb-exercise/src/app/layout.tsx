@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import "lumir-internal-design-system/index.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",

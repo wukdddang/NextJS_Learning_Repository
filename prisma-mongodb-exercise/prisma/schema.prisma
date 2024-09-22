@@ -13,7 +13,6 @@ datasource db {
 model User {
   id               String       @id @default(auto()) @map("_id") @db.ObjectId
   email            String       @unique
-  password         String
   name             String
   isAuthenticated  Boolean      @default(false)
   isEvaluator      Boolean      @default(false)
@@ -28,6 +27,7 @@ model User {
 model Division {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  applicants Applicant[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -107,11 +107,14 @@ model Applicant {
   experience         Experience
   resumeResult       Result           @default(PENDING)
   interviewResult    Result           @default(PENDING)
-  birthday           String?
+  birthDate          String?
   email              String?
   phone              String?
-  resumePath         String?
-  portfolioPath      String?
+  address            String?
+  resume             String?
+  portfolio          String?
+  positionId         String?          @db.ObjectId
+  position           RecruitmentField? @relation(fields: [positionId], references: [id])
   isAgree            Boolean          @default(false)
   isOptionalAgree    Boolean          @default(false)
   isSensitiveAgree   Boolean          @default(false)
@@ -124,7 +127,8 @@ model Applicant {
   end                String?
   empoloyeeType      EmployeeType?
   colorLabel         String           @default("default")
-  division           String?
+  divisionId         String? @db.ObjectId
+  division           Division? @relation(fields: [divisionId], references: [id])
   failReason         String?
   accessRoute        AccessRoute      @default(NOT_ENTERED)
   createdAt          DateTime         @default(now())
@@ -155,14 +159,15 @@ enum RecruitmentStatus {
 }
 
 model RecruitmentField {
-  id        String            @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  desc      String?
-  status    RecruitmentStatus @default(RECRUITING)
-  start     String?
-  end       String?
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  desc        String?
+  status      RecruitmentStatus @default(RECRUITING)
+  start       String?
+  end         String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  applicants  Applicant[]
 }
 
 enum JobTitle {
@@ -193,11 +198,9 @@ model Report {
   interviewerName String?
   applicantId     String    @db.ObjectId
   applicant       Applicant @relation(fields: [applicantId], references: [id])
-  birthday        String?
   education       String?
   career          String?
   certification   String?
-  home            String?
   etc             String?
   knowledge       String?
   skill           String?

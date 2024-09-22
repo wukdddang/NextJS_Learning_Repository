@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useMemo, useState} from 'react';
-import {RoomProvider, useMutation, useOthers, useStorage, useUpdateMyPresence,} from "@liveblocks/react/suspense";
+import {RoomProvider, useMutation, useOthers, useStorage, useUpdateMyPresence} from "@liveblocks/react/suspense";
 import "@liveblocks/react";
 import {LiveList, LiveObject} from "@liveblocks/client";
 import {ClientSideSuspense} from "@liveblocks/react";
