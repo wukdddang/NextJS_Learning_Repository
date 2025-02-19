@@ -52,10 +52,15 @@ export default function Home() {
           registration = await registerServiceWorker();
         }
 
+        // registration이 존재하는지 한번 더 확인
+        if (!registration) {
+          throw new Error("서비스 워커 등록 실패");
+        }
+
         // 서비스 워커가 활성화될 때까지 대기
         if (registration.active === null) {
           await new Promise<void>((resolve) => {
-            registration.addEventListener("activate", () => resolve(), {
+            registration?.addEventListener("activate", () => resolve(), {
               once: true,
             });
           });
