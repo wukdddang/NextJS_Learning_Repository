@@ -1,4 +1,5 @@
 import webpush from "web-push";
+import { NextResponse } from "next/server";
 
 // VAPID 키 설정
 const vapidKeys = {
@@ -14,7 +15,10 @@ webpush.setVapidDetails(
 
 export async function POST(req: Request) {
   try {
-    const subscription = await req.json();
+    // 구독 정보를 직접 받는 대신 저장된 모든 구독자에게 전송
+    const { subscriptions } = await fetch("/api/subscribe").then((res) =>
+      res.json()
+    );
 
     const payload = JSON.stringify({
       title: "새로운 알림",
@@ -22,10 +26,22 @@ export async function POST(req: Request) {
       url: "/",
     });
 
-    await webpush.sendNotification(subscription, payload);
+    // 모든 구독자에게 알림 전송
+    const results = await Promise.all(
+      subscriptions.map((subscription: PushSubscription) =>
+        webpush
+          .sendNotification(subscription as any, payload)
+          .catch((error) => ({ error, subscription }))
+      )
+    );
 
-    return new Response("알림이 전송되었습니다.", { status: 200 });
+    const succeeded = results.filter((result) => !result.error).length;
+    const failed = results.filter((result) => result.error).length;
+
+    return NextResponse.json({
+      message: `알림 전송 완료: 성공 ${succeeded}건, 실패 ${failed}건`,
+    });
   } catch (error) {
-    return new Response("알림 전송 실패", { status: 500 });
+    return NextResponse.json({ error: "알림 전송 실패" }, { status: 500 });
   }
 }

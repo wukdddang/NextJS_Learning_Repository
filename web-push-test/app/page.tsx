@@ -16,7 +16,7 @@ export default function Home() {
   );
 
   // VAPID 공개키 (실제로는 환경변수로 관리해야 합니다)
-  const publicVapidKey = "여기에_생성된_VAPID_공개키를_넣으세요";
+  const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!;
 
   useEffect(() => {
     setIsSupported("Notification" in window);
@@ -59,14 +59,14 @@ export default function Home() {
 
         setSubscription(subscription);
 
-        // 여기서 서버에 구독 정보를 전송합니다
-        // await fetch('/api/subscribe', {
-        //   method: 'POST',
-        //   body: JSON.stringify(subscription),
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        // });
+        // 서버에 구독 정보 전송
+        await fetch("/api/subscribe", {
+          method: "POST",
+          body: JSON.stringify(subscription),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         console.log("푸시 알림 구독 완료:", subscription);
       } catch (error) {
