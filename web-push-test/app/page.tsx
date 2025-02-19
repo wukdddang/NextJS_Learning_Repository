@@ -15,7 +15,6 @@ export default function Home() {
     null
   );
 
-  // VAPID 공개키 (실제로는 환경변수로 관리해야 합니다)
   const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!;
 
   useEffect(() => {
