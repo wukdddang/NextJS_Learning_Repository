@@ -15,6 +15,7 @@ export default function Home() {
     null
   );
 
+  // VAPID 공개키 (실제로는 환경변수로 관리해야 합니다)
   const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!;
 
   useEffect(() => {
@@ -42,41 +43,69 @@ export default function Home() {
     const setupPushSubscription = async () => {
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
 
+      // VAPID 키 디버깅
+      console.log("VAPID 키 확인:", {
+        keyExists: !!publicVapidKey,
+        keyLength: publicVapidKey?.length,
+        key: publicVapidKey,
+      });
+
+      if (!publicVapidKey) {
+        console.error("VAPID 공개키가 설정되지 않았습니다.");
+        return;
+      }
+
       try {
         const registration = await navigator.serviceWorker.ready;
+        console.log("서비스 워커 준비됨, 구독 시도");
+
+        // applicationServerKey 생성 결과 확인
+        const applicationServerKey = urlBase64ToUint8Array(publicVapidKey);
+        console.log("변환된 applicationServerKey:", applicationServerKey);
 
         // 기존 구독 확인
         let subscription = await registration.pushManager.getSubscription();
+        console.log("기존 구독:", subscription);
 
         if (!subscription) {
           // 새로운 구독 생성
+          console.log("새 구독 생성 시도");
           subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+            applicationServerKey,
           });
+          console.log("새 구독 생성됨");
         }
 
         setSubscription(subscription);
 
-        // 서버에 구독 정보 전송
-        await fetch("/api/subscribe", {
-          method: "POST",
-          body: JSON.stringify(subscription),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        // 여기서 서버에 구독 정보를 전송합니다
+        // await fetch('/api/subscribe', {
+        //   method: 'POST',
+        //   body: JSON.stringify(subscription),
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        // });
 
         console.log("푸시 알림 구독 완료:", subscription);
       } catch (error) {
         console.error("푸시 알림 구독 실패:", error);
+        // 더 자세한 에러 정보 출력
+        if (error instanceof Error) {
+          console.error("에러 상세:", {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          });
+        }
       }
     };
 
     if (permission === "granted") {
       setupPushSubscription();
     }
-  }, []);
+  }, [permission, publicVapidKey]);
 
   // Base64 문자열을 Uint8Array로 변환하는 유틸리티 함수
   const urlBase64ToUint8Array = (base64String: string) => {

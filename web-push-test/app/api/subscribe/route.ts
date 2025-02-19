@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-// 실제 운영환경에서는 데이터베이스에 저장해야 합니다
-let subscriptions: PushSubscription[] = [];
-
 export async function POST(req: Request) {
   try {
     const subscription = await req.json();
-    
+
     // Supabase에 구독 정보 저장
     const { data, error } = await supabase
       .from("push_subscriptions")
