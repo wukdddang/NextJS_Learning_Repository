@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,12 +7,13 @@ import { useState, useEffect } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function Home() {
-  const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [permission, setPermission] =
+    useState<NotificationPermission>("default");
   const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
-    setIsSupported('Notification' in window);
-    if ('Notification' in window) {
+    setIsSupported("Notification" in window);
+    if ("Notification" in window) {
       setPermission(Notification.permission);
     }
   }, []);
@@ -21,24 +22,24 @@ export default function Home() {
     try {
       const result = await Notification.requestPermission();
       setPermission(result);
-      
-      if (result === 'granted') {
-        new Notification('알림 활성화됨', {
-          body: '알림이 성공적으로 활성화되었습니다.',
-          icon: '/icon-192x192.png'
+
+      if (result === "granted") {
+        new Notification("알림 활성화됨", {
+          body: "알림이 성공적으로 활성화되었습니다.",
+          icon: "/icon-192x192.png",
         });
       }
     } catch (error) {
-      console.error('Error requesting notification permission:', error);
+      console.error("Error requesting notification permission:", error);
     }
   };
 
   const sendTestNotification = () => {
-    if (permission === 'granted') {
-      new Notification('테스트 알림', {
-        body: '이것은 테스트 알림입니다.',
-        icon: '/icon-192x192.png',
-        vibrate: [200, 100, 200]
+    if (permission === "granted") {
+      new Notification("테스트 알림", {
+        body: "이것은 테스트 알림입니다.",
+        icon: "/icon-192x192.png",
+        // vibrate: [200, 100, 200],
       });
     }
   };
@@ -46,10 +47,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <div className="max-w-md mx-auto pt-10 space-y-4">
-        <Alert variant="warning" className="mb-4">
+        <Alert variant="default" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            현재 환경에서는 서비스 워커를 지원하지 않아 기본 알림만 사용 가능합니다.
+            현재 환경에서는 서비스 워커를 지원하지 않아 기본 알림만 사용
+            가능합니다.
           </AlertDescription>
         </Alert>
 
@@ -68,9 +70,9 @@ export default function Home() {
           ) : (
             <>
               <p className="text-muted-foreground mb-6">
-                {permission === 'granted' 
+                {permission === "granted"
                   ? "알림이 활성화되어 있습니다!"
-                  : permission === 'denied'
+                  : permission === "denied"
                   ? "알림이 차단되어 있습니다. 브라우저 설정에서 허용해주세요."
                   : "알림을 활성화하여 업데이트를 받아보세요."}
               </p>
@@ -79,26 +81,26 @@ export default function Home() {
                 <Button
                   className="w-full"
                   onClick={requestPermission}
-                  disabled={permission === 'granted' || permission === 'denied'}
+                  disabled={permission === "granted" || permission === "denied"}
                 >
-                  {permission === 'granted' 
-                    ? '알림 활성화됨' 
-                    : permission === 'denied'
-                    ? '알림 차단됨'
-                    : '알림 활성화하기'}
+                  {permission === "granted"
+                    ? "알림 활성화됨"
+                    : permission === "denied"
+                    ? "알림 차단됨"
+                    : "알림 활성화하기"}
                 </Button>
 
                 <Button
                   className="w-full"
                   variant="secondary"
                   onClick={sendTestNotification}
-                  disabled={permission !== 'granted'}
+                  disabled={permission !== "granted"}
                 >
                   테스트 알림 보내기
                 </Button>
               </div>
 
-              {permission === 'granted' && (
+              {permission === "granted" && (
                 <div className="mt-6 p-4 bg-muted rounded-lg">
                   <h2 className="font-semibold mb-2">iOS 사용자 안내:</h2>
                   <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
