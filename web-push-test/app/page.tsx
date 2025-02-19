@@ -70,11 +70,20 @@ export default function Home() {
         if (!subscription) {
           // 새로운 구독 생성
           console.log("새 구독 생성 시도");
-          subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey,
-          });
-          console.log("새 구독 생성됨");
+          try {
+            subscription = await registration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey,
+            });
+            console.log("새 구독 생성됨");
+          } catch (error) {
+            console.error("구독 생성 중 상세 에러:", {
+              error,
+              registration,
+              applicationServerKey,
+            });
+            throw error;
+          }
         }
 
         setSubscription(subscription);
@@ -109,18 +118,29 @@ export default function Home() {
 
   // Base64 문자열을 Uint8Array로 변환하는 유틸리티 함수
   const urlBase64ToUint8Array = (base64String: string) => {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/\-/g, "+")
-      .replace(/_/g, "/");
+    try {
+      console.log("변환 전 VAPID 키:", base64String);
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      console.log("패딩 추가:", padding.length, "개");
 
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
+      const base64 = (base64String + padding)
+        .replace(/\-/g, "+")
+        .replace(/_/g, "/");
+      console.log("변환된 base64:", base64);
 
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
+      const rawData = window.atob(base64);
+      console.log("디코딩된 데이터 길이:", rawData.length);
+
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      console.log("최종 Uint8Array 길이:", outputArray.length);
+      return outputArray;
+    } catch (error) {
+      console.error("VAPID 키 변환 중 오류:", error);
+      throw error;
     }
-    return outputArray;
   };
 
   const requestPermission = async () => {
