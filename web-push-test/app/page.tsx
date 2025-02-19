@@ -10,13 +10,90 @@ export default function Home() {
   const [permission, setPermission] =
     useState<NotificationPermission>("default");
   const [isSupported, setIsSupported] = useState(false);
+  const [swSupported, setSwSupported] = useState(false);
+  const [subscription, setSubscription] = useState<PushSubscription | null>(
+    null
+  );
+
+  // VAPID 공개키 (실제로는 환경변수로 관리해야 합니다)
+  const publicVapidKey = "여기에_생성된_VAPID_공개키를_넣으세요";
 
   useEffect(() => {
     setIsSupported("Notification" in window);
     if ("Notification" in window) {
       setPermission(Notification.permission);
     }
+
+    // 서비스 워커 지원 여부 확인
+    setSwSupported("serviceWorker" in navigator);
+
+    // 서비스 워커 등록
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log("서비스 워커가 등록되었습니다:", registration);
+        })
+        .catch((error) => {
+          console.error("서비스 워커 등록 실패:", error);
+        });
+    }
+
+    // 푸시 구독 설정
+    const setupPushSubscription = async () => {
+      if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+
+      try {
+        const registration = await navigator.serviceWorker.ready;
+
+        // 기존 구독 확인
+        let subscription = await registration.pushManager.getSubscription();
+
+        if (!subscription) {
+          // 새로운 구독 생성
+          subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+          });
+        }
+
+        setSubscription(subscription);
+
+        // 여기서 서버에 구독 정보를 전송합니다
+        // await fetch('/api/subscribe', {
+        //   method: 'POST',
+        //   body: JSON.stringify(subscription),
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        // });
+
+        console.log("푸시 알림 구독 완료:", subscription);
+      } catch (error) {
+        console.error("푸시 알림 구독 실패:", error);
+      }
+    };
+
+    if (permission === "granted") {
+      setupPushSubscription();
+    }
   }, []);
+
+  // Base64 문자열을 Uint8Array로 변환하는 유틸리티 함수
+  const urlBase64ToUint8Array = (base64String: string) => {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, "+")
+      .replace(/_/g, "/");
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
 
   const requestPermission = async () => {
     try {
@@ -47,11 +124,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <div className="max-w-md mx-auto pt-10 space-y-4">
-        <Alert variant="default" className="mb-4">
+        <Alert
+          variant={swSupported ? "default" : "destructive"}
+          className="mb-4"
+        >
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            현재 환경에서는 서비스 워커를 지원하지 않아 기본 알림만 사용
-            가능합니다.
+            {swSupported
+              ? "서비스 워커가 지원되어 푸시 알림을 사용할 수 있습니다."
+              : "현재 환경에서는 서비스 워커를 지원하지 않아 기본 알림만 사용 가능합니다."}
           </AlertDescription>
         </Alert>
 
