@@ -30,12 +30,14 @@ self.addEventListener("notificationclick", function (event) {
   event.waitUntil(clients.openWindow("/"));
 });
 
-// 서비스 워커 설치 이벤트
-self.addEventListener("install", function (event) {
+// 서비스 워커 설치 시
+self.addEventListener("install", (event) => {
+  console.log("서비스 워커 설치됨");
   event.waitUntil(self.skipWaiting());
 });
 
-// 서비스 워커 활성화 이벤트
-self.addEventListener("activate", function (event) {
+// 서비스 워커 활성화 시
+self.addEventListener("activate", (event) => {
+  console.log("서비스 워커 활성화됨");
   event.waitUntil(self.clients.claim());
 });

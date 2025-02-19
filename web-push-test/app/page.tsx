@@ -27,80 +27,78 @@ export default function Home() {
     // 서비스 워커 지원 여부 확인
     setSwSupported("serviceWorker" in navigator);
 
-    // 서비스 워커 등록
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/sw.js")
-        .then((registration) => {
-          console.log("서비스 워커가 등록되었습니다:", registration);
-        })
-        .catch((error) => {
-          console.error("서비스 워커 등록 실패:", error);
+    // 서비스 워커 등록은 별도 함수로 분리
+    const registerServiceWorker = async () => {
+      try {
+        const registration = await navigator.serviceWorker.register("/sw.js", {
+          scope: "/",
         });
-    }
+        console.log("서비스 워커가 등록되었습니다:", registration);
+        return registration;
+      } catch (error) {
+        console.error("서비스 워커 등록 실패:", error);
+        throw error;
+      }
+    };
 
     // 푸시 구독 설정
     const setupPushSubscription = async () => {
       if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
 
-      // VAPID 키 디버깅
-      console.log("VAPID 키 확인:", {
-        keyExists: !!publicVapidKey,
-        keyLength: publicVapidKey?.length,
-        key: publicVapidKey,
-      });
-
-      if (!publicVapidKey) {
-        console.error("VAPID 공개키가 설정되지 않았습니다.");
-        return;
-      }
-
       try {
-        const registration = await navigator.serviceWorker.ready;
-        console.log("서비스 워커 준비됨, 구독 시도");
-
-        // applicationServerKey 생성 결과 확인
-        const applicationServerKey = urlBase64ToUint8Array(publicVapidKey);
-        console.log("변환된 applicationServerKey:", applicationServerKey);
-
-        // 기존 구독 확인
-        let subscription = await registration.pushManager.getSubscription();
-        console.log("기존 구독:", subscription);
-
-        if (!subscription) {
-          // 새로운 구독 생성
-          console.log("새 구독 생성 시도");
-          try {
-            subscription = await registration.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey,
-            });
-            console.log("새 구독 생성됨");
-          } catch (error) {
-            console.error("구독 생성 중 상세 에러:", {
-              error,
-              registration,
-              applicationServerKey,
-            });
-            throw error;
-          }
+        // 서비스 워커 등록 확인
+        let registration = await navigator.serviceWorker.getRegistration();
+        if (!registration) {
+          registration = await registerServiceWorker();
         }
+
+        // 서비스 워커가 활성화될 때까지 대기
+        if (registration.active === null) {
+          await new Promise<void>((resolve) => {
+            registration.addEventListener("activate", () => resolve(), {
+              once: true,
+            });
+          });
+        }
+
+        // VAPID 키 확인 및 변환
+        if (!publicVapidKey) {
+          throw new Error("VAPID 공개키가 설정되지 않았습니다.");
+        }
+
+        const applicationServerKey = urlBase64ToUint8Array(publicVapidKey);
+
+        // 기존 구독 해제 (문제 해결을 위해 새로 구독)
+        const existingSubscription =
+          await registration.pushManager.getSubscription();
+        if (existingSubscription) {
+          await existingSubscription.unsubscribe();
+        }
+
+        // 새로운 구독 생성
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey,
+        });
 
         setSubscription(subscription);
 
-        // 여기서 서버에 구독 정보를 전송합니다
-        // await fetch('/api/subscribe', {
-        //   method: 'POST',
-        //   body: JSON.stringify(subscription),
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        // });
+        // 서버에 구독 정보 전송
+        const response = await fetch("/api/subscribe", {
+          method: "POST",
+          body: JSON.stringify(subscription),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("서버 응답 오류: " + response.statusText);
+        }
 
         console.log("푸시 알림 구독 완료:", subscription);
       } catch (error) {
         console.error("푸시 알림 구독 실패:", error);
-        // 더 자세한 에러 정보 출력
         if (error instanceof Error) {
           console.error("에러 상세:", {
             name: error.name,
