@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+nextjs 15 에서 bff 패턴을 적용한 인증 시스템 프로젝트를 만들고 싶어.
+
+redis 를 세션 저장소로 사용해주고 SWR로 실시간 데이터 동기화를 진행해줘.
+
+윈도우 환경이고 redis 는 docker run -d -p 6379:6379 redis:alpine 이 명령어로 실행되고 있어.
+
+
+간단한 CRUD 기능을 연결할 수 있도록 sqlite를 사용해줘.
